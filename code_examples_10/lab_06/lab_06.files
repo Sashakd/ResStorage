@@ -1,0 +1,6 @@
+main.c
+operations.c
+operations.h
+read.c
+read.h
+structures.h

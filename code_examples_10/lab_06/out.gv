@@ -1,0 +1,8 @@
+digraph A {
+aaa -> aab;
+aba -> aaa;
+aba -> bab;
+bab -> bbb;
+bbb -> bba;
+bbb -> oprts;
+}

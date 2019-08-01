@@ -1,0 +1,12 @@
+digraph tree_create_result {
+r_LL -> r_LLL;
+r_L -> r_LL;
+r_L -> r_LR;
+root -> r_L;
+root -> r_R;
+r_RL -> r_RLR;
+r_R -> r_RL;
+r_R -> r_RR;
+r_RR -> r_RRL;
+r_RR -> r_RRR;
+}

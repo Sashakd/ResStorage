@@ -1,0 +1,15 @@
+graph towns {
+A -- B [color=blue, style=dotted, label="2"];
+A -- C [color=blue, style=dotted, label="3"];
+A -- D [color=blue, style=dotted, label="1"];
+A -- L [color=blue, style=dotted, label="2"];
+A -- F [color=blue, style=dotted, label="4"];
+B -- C [color=blue, style=dotted, label="7"];
+B -- L [color=blue, style=dotted, label="1"];
+C -- E [color=blue, style=dotted, label="1"];
+C -- G [color=blue, style=dotted, label="3"];
+E -- D [color=blue, style=dotted, label="2"];
+E -- Q [color=blue, style=dotted, label="5"];
+D -- L [color=blue, style=dotted, label="3"];
+F -- G [color=blue, style=dotted, label="1"];
+}

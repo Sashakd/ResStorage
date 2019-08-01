@@ -1,0 +1,188 @@
+/*
+	int* arr1 = NULL;
+	int r1, c1;
+	
+	int* arr2 = NULL;
+	int r2, c2;
+	
+	int* res = NULL;
+	int rr, rc;
+	*/
+	/*
+	FILE* f = fopen("a.txt", "w");
+	
+	if (generate_rand_matrix(f, 4, 3, 70)) // 5 6
+		printf("DONE (YES)\n");
+	else
+		printf("DONE (NO )\n");
+	*/
+	
+	/*
+	arr1 = read_array_matrix(f1, &r1, &c1);
+	arr2 = read_array_matrix(f2, &r2, &c2);
+	
+	printf("\n");
+	print_array_matrix(stdout, arr1, r1, c1);
+	printf("\n");
+	printf("  *\n");
+	printf("\n");
+	print_array_matrix(stdout, arr2, r2, c2);
+	printf("\n");
+	printf("  =\n");
+	printf("\n");
+	res = multiply_array_matrix(arr1, r1, c1, arr2, r2, c2, &rr, &rc); // <-- проблемс
+	if (res)
+		print_array_matrix(stdout, res, rr, rc);
+	else
+		printf("NONE\n");
+	printf("\n");
+	*/
+
+	//int  iA[] = {2, 4, 1, 5, 6, 7, 1, 2, 0};
+	//int iJA[] = {1, 3, 2, 3, 6, 9, 1, 2, 0};
+	
+	//struct matrix C = {.A = iA, .JA = iJA, .Nk = NULL};
+
+	//debug_print_struct_matrix(stdout, &C);
+	//if (A) debug_print_struct_matrix(stdout, A);
+
+	//if (B) debug_print_struct_matrix(stdout, B);
+	
+	//int rw = 3; // Из первой строки читается верно
+	//int cl = 5; // [3, 4] [3, 5] -- ошибки со второй строки
+	
+	// 8,4;  4,6   // 10, 4
+	/*
+	for (int i = 1; i < 10; i++)
+		for (int j = 1; j < 4; j++)
+		{
+			printf("                        element A[ %d, %d] = %d\n", i, j, get_elem_struct_matrix(A, i, j));
+			printf("------------------------------------------------------\n");
+		}
+		*/
+
+/*
+int get_elem_struct_matrix(struct matrix* matr, int row, int col) // Работает в штатном режиме (проблема со строкой перед пустой посередине)
+{
+	struct IA *qur = matr->Nk;
+	int r = 0;
+	int i = 0;
+	
+	while (*(matr->JA+i-1) != 0)
+	{
+		i++;
+		if (qur)
+		{
+			if (i == qur->NJA)
+			{
+				r++;
+				qur = qur->next;
+			}
+			else
+			{
+				////////////////////////// Для пустой строки //////////////////////////
+				if (qur->NJA == 0)
+				{
+					while ((qur) && (qur->NJA == 0))
+					{
+						r++;
+						qur = qur->next;  //printf("empty -- r = %d;  i = %d [NA = %d;  NJA = %d]\n", r, i, qur->NA, qur->NJA);
+						printf("empty -- i = %d  r = %d\n", i, r);
+					}
+					
+					if (i > 0)
+						i--;
+					
+					printf("empty -- i = %d  r = %d\n", i, r);
+				}
+				////////////////////////// Для пустой строки //////////////////////////
+			}
+		}
+		
+		// Основное действие
+		if (r > row)
+			return 0;
+		else
+		{
+			//printf("not[r = %d;  c = %d;  i = %d]\n", r, *(matr->JA + i-1), i);
+			if ((r == row) && (*(matr->JA + i-1) == col))
+			{
+				printf("[r = %d;  c = %d;  i = %d;  A[i] = %d]\n", r, *(matr->JA + i-1), i, *(matr->A + i-1));
+				return *(matr->A + i-1);
+			}
+		}
+	}
+	
+	return 0;
+}
+*/
+
+
+// Умножение матриц
+/*
+struct matrix* multiply_struct_matrix(struct matrix* A, struct matrix* B)
+{
+	int* С = malloc(sizeof(struct matrix));
+	int i2 = 0;
+	int r2 = 0;
+	int qur_r_nd = 0;
+	
+	struct IA *rem1 = A->Nk;
+	int max_i1 = 0;
+	int prev_i1 = 0;
+	int r_inc1 = 0;
+	int r_inc2 = 0;
+	int r1 = 0;
+	int max_k2 = get_arr_zero_len(B->JA);
+	
+	while (*(A->JA+prev_i1) != 0)
+	{
+		max_i1 = get_row_end(A, prev_i1, &r_inc1); ////// доделать и проверить
+		
+		struct IA *rem2 = B->Nk;
+		
+		while (k2 < max_k2)
+		{
+			B->Nk = rem2;
+			r2 = 0;
+			prev_i2 = 0;
+			
+			for (int i = prev_i1; i <= max_i1; i++) // стандартный проход по строке
+			{
+				if (r2+1 < *(A->JA+i))
+				{
+					max_i2 = get_row_end(B, prev_i2, &r_inc2);
+					
+					prev_i2 = max_i2+1;
+					r2 += r_inc2;
+				}
+				else
+				{
+					max_i2 = get_row_end(B, prev_i2, &r_inc2);
+					int B_c_el = 0;
+					
+					// основная операция
+					// проходом по столбцам
+					if ((*(A->JA+i) == r2+1))
+					{
+						B_c_el = find_c_in_row(B->A, B->JA, prev_i2, max_i2, k2);
+						
+						if (B_c_el)
+						{
+							// умножение
+						}
+					}
+					
+					prev_i2 = max_i2+1;
+					r2 += r_inc2;
+				}
+			}      ////////////////////////////////////////////////////
+			
+			k2++;
+		}
+		
+		prev_i1 = max_i1+1;
+		r1 += r_inc1;
+	}
+}
+*/

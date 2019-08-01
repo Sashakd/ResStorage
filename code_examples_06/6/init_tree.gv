@@ -1,0 +1,7 @@
+digraph tree_create_result {
+e -> f;
+e -> c;
+c -> d;
+b -> e;
+b -> a;
+}

@@ -1,0 +1,244 @@
+program Project1;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils, Windows;
+const
+  MAX = 320;
+  
+type
+  Last = record
+      HasAttic: Boolean;
+      SAttic: Real;
+      PosPrivat: Boolean;
+  end;
+
+  Other = record
+    HasBalc: Boolean;
+    SBalc: Real;
+  end;
+
+  Flat = record
+    Address: string;
+    S: Real;
+    Rooms: Integer;
+    Floor: Integer;
+    MetCost: Real;
+    case FType: Integer of
+      1: (HasCellar: Boolean);
+      2: (L: Last);
+      3: (N: Other);
+  end;
+
+  Key = record
+    Address: string;
+    Num: Integer;
+  end;
+
+  TList = array[0..MAX - 1] of Flat;
+  TKeys = array[0..MAX - 1] of Key;
+  TIntAr = array of Integer;
+
+procedure CreateKeys(var Keys: TKeys; var List: TList);
+var
+  K: Key;
+  I: Integer;
+begin
+  for I := 0 to Length(List) - 1 do
+  begin
+    K.Address := List[I].Address;
+    K.Num := I;
+    Keys[I] := K;
+  end;
+end; 
+
+procedure ReadList(var Keys: TKeys; var List: TList);
+var
+  F: TextFile;
+  Count: Integer;
+  I: Integer;
+  Str: string;
+  Fl: Flat;
+begin
+  AssignFile(F, 'flats.txt');
+  if FileExists('flats.txt') then
+  begin
+    Reset(F);
+    ReadLn(F, Count);
+
+    for I := 0 to Count - 1 do
+    begin
+      repeat
+        ReadLn(F, Str);
+      until Str <> '';
+      ReadLn(F, Fl.Address);
+      ReadLn(F, Str);
+      Fl.S := StrToFloat(Str);
+      ReadLn(F, Fl.Rooms);
+      ReadLn(F, Fl.Floor);
+      ReadLn(F, Str);
+      Fl.MetCost := StrToFloat(Str);
+      ReadLn(F, Str);
+      ReadLn(F, Fl.FType);
+      case Fl.FType of
+      1:begin
+          ReadLn(F, Str);
+          if Str = 'да' then
+            Fl.HasCellar := true
+          else
+            Fl.HasCellar := false;
+        end;
+      2:begin
+          ReadLn(F, Str);
+          if Str = 'да' then
+            Fl.L.HasAttic := true
+          else
+            Fl.L.HasAttic := false;
+          ReadLn(F, Str);
+          Fl.L.SAttic := StrToFloat(Str);
+          ReadLn(F, Str);
+          if Str = 'да' then
+            Fl.L.PosPrivat := true
+          else
+            Fl.L.PosPrivat := false;
+        end;
+      3:begin
+          ReadLn(F, Str);
+          if Str = 'да' then
+            Fl.N.HasBalc := true
+          else
+            Fl.N.HasBalc := false;
+          ReadLn(F, Str);
+          Fl.N.SBalc := StrToFloat(Str);
+        end;
+      end;
+      List[I] := Fl;
+    end;
+
+    CloseFile(F);
+    CreateKeys(Keys, List);
+  end;
+end;
+
+procedure SwKeys(var A: Key; var B: Key);
+var
+  C: Key;
+begin
+    C := A;
+    A := B;
+    B := C;
+end;
+
+procedure SwFlats(var A: Flat; var B: Flat);
+var
+  C: Flat;
+begin
+    C := A;
+    A := B;
+    B := C;
+end;
+
+procedure KeySortIns(var A: TKeys);
+var
+  I, J: Integer;
+begin
+  I := 1;    
+  while I < Length(A) do
+  begin
+    J := I;
+    while (J > 0) and (A[j - 1].Address > A[j].Address) do
+    begin
+      SwKeys(A[J - 1], A[j]);
+      Dec(J);
+    end;
+    Inc(I);
+  end;
+end;
+
+procedure FlatSortIns(var A: TList);
+var
+  I, J: Integer;
+begin
+  I := 1;    
+  while I < Length(A) do
+  begin
+    J := I;
+    while (J > 0) and (A[j - 1].Address > A[j].Address) do
+    begin
+      SwFlats(A[J - 1], A[j]);
+      Dec(J);
+    end;
+    Inc(I);
+  end;
+end;
+
+procedure KeySortSel(var A: TKeys);
+var
+  I, J, K: Integer;
+begin  
+  I := 0;
+  while I < Length(A) do
+  begin
+    K := I;
+    J := I + 1;
+    while J < Length(A) do
+    begin
+      if A[j].Address < A[k].Address then
+        K := J;
+      Inc(J);
+    end;
+    SwKeys(A[I], A[K]);
+    Inc(I);
+  end;
+end;
+
+procedure FlatSortSel(var A: TList);
+var
+  I, J, K: Integer;
+begin  
+  I := 0;
+  while I < Length(A) do
+  begin
+    K := I;
+    J := I + 1;
+    while J < Length(A) do
+    begin
+      if A[j].Address < A[k].Address then
+        K := J;
+      Inc(J);
+    end;
+    SwFlats(A[I], A[K]);
+    Inc(I);
+  end;
+end;
+
+procedure FindSel(var Keys: TKeys; var List: TList; var Sel: TIntAr);
+var
+  I: Integer;
+begin
+    SetLength(Sel, 0);
+    for I := 0 to Length(Keys) - 1 do
+        if List[Keys[I].Num].FType = 2 and List[Keys[I].Num].L.HasAttic and List[Keys[I].Num].L.PosPrivat then
+        begin
+          SetLength(Sel, Length(Sel + 1));
+          Sel[Length(Sel) - 1] := i;
+end;
+
+var
+  List: TList;
+  Keys: TKeys;
+  Te, Tb, Res: Int64;
+begin
+  ReadList(Keys, List);
+  Tb := GetTickCount;
+  FlatSortSel(List);
+  Te := GetTickCount;
+  Res := Te - Tb;
+  WriteLn(Tb);
+  WriteLn(Te);
+  WriteLn(res);
+    
+end.
